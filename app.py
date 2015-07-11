@@ -20,7 +20,7 @@ def _get_response_json(obj):
     if obj != None:
         response = make_response(json.dumps(obj, default=_convert_decimal_to_float))
     else:
-        response = make_response('', 204) #HTTP 204 = NO CONTENT
+        response = make_response('', 204) #HTTP 204(NO CONTENT) when no result
     
     response.mimetype='application/json'
     
