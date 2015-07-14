@@ -12,6 +12,7 @@ def create_app(app_name='dcsqa', config='config.DevelopmentConfig'):
     app.config.from_object(config)
 
     # register blueprint for each restful entry
+    # http://flask.pocoo.org/docs/0.10/blueprints/
     app.register_blueprint(criteria_blueprint, url_prefix='/criteria')
     app.register_blueprint(raw_blueprint, url_prefix='/raw')
 
