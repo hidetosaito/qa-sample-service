@@ -2,7 +2,18 @@
 
 FROM python:2.7.7
 
+# Bundle app source
 ADD . /code
-WORKADR /code
+
+# install dependency
+WORKDIR /code
 RUN pip install -r requirements.txt
-CMD python entry.py
+
+# Expose port
+EXPOSE 5000
+
+# Run
+CMD ["python", "entry.py"]
+
+
+
