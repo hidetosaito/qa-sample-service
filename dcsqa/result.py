@@ -2,12 +2,17 @@
 # coding: utf-8
 
 import response
-from flask import request
-from flask import Blueprint
+from flask import request, Blueprint, current_app
 from dcsqa.dao.table import DataTable
-from flask import current_app
+from auth import auth
 
 result_blueprint = Blueprint('result', __name__)
+
+
+@result_blueprint.before_request
+@auth.login_required
+def before_request():
+    current_app.logger.debug("user login - {user}".format(user=auth.username()))
 
 
 @result_blueprint.route('', methods=['GET'])

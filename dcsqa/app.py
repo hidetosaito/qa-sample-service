@@ -5,6 +5,7 @@ from flask import Flask
 from criteria import criteria_blueprint
 from raw import raw_blueprint
 from result import result_blueprint
+from auth import auth
 
 app = Flask(__name__)
 
@@ -24,3 +25,9 @@ def create_app(app_name='dcsqa', config='config.DevelopmentConfig'):
 @app.route('/')
 def index():
     return 'please use API'
+
+
+@app.route('/login')
+@auth.login_required
+def login():
+    return 'welcome!'

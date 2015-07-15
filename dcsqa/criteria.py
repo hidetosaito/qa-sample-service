@@ -4,11 +4,15 @@
 import response
 from dcsqa.dao.table import DataTable
 from dcsqa.dao.queue import Queue
-from flask import request
-from flask import Blueprint
-from flask import current_app
+from auth import auth
+from flask import request, Blueprint, current_app
 
 criteria_blueprint = Blueprint('criteria', __name__)
+
+@criteria_blueprint.before_request
+@auth.login_required
+def before_request():
+    current_app.logger.debug("user login - {user}".format(user=auth.username()))
 
 
 @criteria_blueprint.route('', methods=['GET'])
