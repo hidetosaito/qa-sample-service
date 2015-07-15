@@ -17,4 +17,4 @@ class Queue(object):
         self.queue.send_message(MessageBody=json.dumps(data))
 
     def pop(self):
-        pass
+        return self.queue.receive_messages()

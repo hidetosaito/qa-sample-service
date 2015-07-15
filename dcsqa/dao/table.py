@@ -52,12 +52,17 @@ class DataTable(object):
             self.logger.warn("there are no record TicketKey=%s, Host=%s in %s" % (ticket_key, host, self.table.name))
             return None
         
-    def save(self, criteria_json):
-        response = self.table.put_item(Item=criteria_json)
+    def save(self, item):
+        """
+        Save item into Table
+        :param item: (dict) of saved item
+        :return:
+        """
+        response = self.table.put_item(Item=item)
         self.logger.info(response)
         return response
     
-    def update(self, ticket_key, monitor_criteria_json):
+    def update(self, ticket_key, text_json):
         pass
     
     def delete(self, ticket_key):

@@ -4,6 +4,7 @@
 class Config(object):
 
     DEBUG = True
+    TESTING = False
 
 
 class ProductionConfig(Config):
@@ -30,3 +31,18 @@ class DevelopmentConfig(Config):
     # sqs
     SQS_REGIOM = 'us-east-1'
     SQS_NAME = 'QATaskQueue-POC'
+
+
+class TestConfig(Config):
+
+    TESTING = True
+
+    # dynamodb
+    DYNAMODB_REGION = 'us-east-1'
+    CRITERIA_TABLE = 'test-Criteria'
+    RAW_TABLE = 'test-RawData'
+    RESULT_TABLE = 'test-QAResult'
+
+    # sqs
+    SQS_REGIOM = 'us-east-1'
+    SQS_NAME = 'test-POC'

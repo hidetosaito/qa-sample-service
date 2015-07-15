@@ -3,3 +3,5 @@ Flask==0.10.1
 mock==1.1.2
 Flask-API==0.6.3
 Flask-HTTPAuth
+# using moto#a63d7486173f3b717d35310ede5acfa87809deb2 for https://github.com/spulec/moto/issues/374
+git+git://github.com/spulec/moto.git
