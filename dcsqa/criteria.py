@@ -51,6 +51,7 @@ def set_criteria_by_ticketkey_host():
     #    2. JSON must be parsed successfully
     #    3. JSON must has TicketKey
     #    4. JSON must has Host
+    #    5. enqueue
     #
     
     # 1.
