@@ -1,11 +1,9 @@
 #http://flask.pocoo.org/docs/0.10/tutorial/setup/
-import os
 
 
 class Config(object):
 
     DEBUG = True
-    #BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 
 class ProductionConfig(Config):

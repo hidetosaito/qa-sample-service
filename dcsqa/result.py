@@ -7,38 +7,38 @@ from flask import Blueprint
 from dcsqa.dao.table import DataTable
 from flask import current_app
 
-raw_blueprint = Blueprint('raw', __name__)
+result_blueprint = Blueprint('result', __name__)
 
 
-@raw_blueprint.route('', methods=['GET'])
-def get_all_raw():
+@result_blueprint.route('', methods=['GET'])
+def get_all_result():
     raw = DataTable(region_name=current_app.config['DYNAMODB_REGION'],
-                    table_name=current_app.config['RAW_TABLE'],
+                    table_name=current_app.config['RESULT_TABLE'],
                     logger=current_app.logger)
     result = raw.find_all()
     return response.get_json(result)
 
 
-@raw_blueprint.route('/<ticket_key>', methods=['GET'])
-def get_raw_by_ticketkey(ticket_key):
+@result_blueprint.route('/<ticket_key>', methods=['GET'])
+def get_result_by_ticketkey(ticket_key):
     raw = DataTable(region_name=current_app.config['DYNAMODB_REGION'],
-                    table_name=current_app.config['RAW_TABLE'],
+                    table_name=current_app.config['RESULT_TABLE'],
                     logger=current_app.logger)
     result = raw.find_by_ticketkey(ticket_key)
     return response.get_json(result)
 
 
-@raw_blueprint.route('/<ticket_key>/<host>', methods=['GET'])
-def get_raw_by_ticketkey_host(ticket_key, host):
+@result_blueprint.route('/<ticket_key>/<host>', methods=['GET'])
+def get_result_by_ticketkey_host(ticket_key, host):
     raw = DataTable(region_name=current_app.config['DYNAMODB_REGION'],
-                    table_name=current_app.config['RAW_TABLE'],
+                    table_name=current_app.config['RESULT_TABLE'],
                     logger=current_app.logger)
     result = raw.find_by_ticketkey_host(ticket_key, host)
     return response.get_json(result)
 
 
-@raw_blueprint.route('', methods=['POST'])
-def set_raw_by_ticketkey_host():
+@result_blueprint.route('', methods=['POST'])
+def set_result_by_ticketkey_host():
 
     #
     # [Validation]
@@ -58,6 +58,7 @@ def set_raw_by_ticketkey_host():
         data = request.get_json()
     except Exception as ex:
         #criteria_blueprint.loo
+        current_app.logger.error(ex)
         return response.bad_request("invalid JSON format")
 
     # 3.
@@ -69,7 +70,7 @@ def set_raw_by_ticketkey_host():
         return response.bad_request("Host is not found")
 
     dao = DataTable(region_name=current_app.config['DYNAMODB_REGION'],
-                    table_name=current_app.config['CRITERIA_TABLE'],
+                    table_name=current_app.config['RESULT_TABLE'],
                     logger=current_app.logger)
     result = dao.save(data)
 
