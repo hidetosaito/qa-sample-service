@@ -1,5 +1,6 @@
 import unittest
-import boto3
+import mock
+import json
 from mock import Mock
 from dcsqa.dao.queue import Queue
 
@@ -8,7 +9,7 @@ class MockSQS(object):
     _message_queue = []
 
     def send_message(self, MessageBody):
-        print "miumiu"
+        self._message_queue.append(MessageBody)
         return {
             'MessageId': 'test123',
             'MD5OfMessageBody': MessageBody
@@ -20,11 +21,10 @@ class MockSQS(object):
         else:
             return None
 
-
 class TestingQueue(Queue):
 
     def __init__(self, region_name, queue_name):
-        self.queue =  Mock(spec = MockSQS)
+        self.queue = MockSQS()
 
 
 class QueueTest(unittest.TestCase):
@@ -45,4 +45,6 @@ class QueueTest(unittest.TestCase):
 
         queue = TestingQueue(region_name=self.region_name, queue_name=self.queue_name)
         queue.push('test!')
-        self.assertIsNotNone(queue.pop())
+        item = queue.pop()
+        self.assertIsNotNone(item)
+        self.assertEqual(json.dumps('test!'), item)
