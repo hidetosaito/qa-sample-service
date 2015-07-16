@@ -18,4 +18,12 @@ class Queue(object):
         self.queue.send_message(MessageBody=json.dumps(data))
 
     def pop(self):
-        return self.queue.receive_messages()
+        messages = self.queue.receive_messages()
+        if len(messages):
+            message = messages[0]
+            try:
+                return json.loads(message.body)
+            except Exception as ex:
+                self.logger.warn('cannot convert to json format')
+                return message.body
+        return None

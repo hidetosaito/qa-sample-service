@@ -1,8 +1,25 @@
 import unittest
 import mock
 import json
+import logging
 from mock import Mock
 from dcsqa.dao.queue import Queue
+
+class MockMessage(object):
+
+    def __init__(self, message):
+        self.message = message
+        self.queue_url = 'https://queue.amazonaws.com/'
+        self.receipt_handle = 'ABCDE'
+
+    def __str__(self):
+        return "queue_url={queue_url}, receipt_handle={receipt_handle}".\
+            format(queue_url=self.queue_url, receipt_handle=self.receipt_handle)
+
+    @property
+    def body(self):
+        return self.message
+
 
 class MockSQS(object):
 
@@ -17,14 +34,16 @@ class MockSQS(object):
 
     def receive_messages(self):
         if len(self._message_queue) > 0:
-            return self._message_queue.pop()
+            message =  self._message_queue.pop()
+            return [MockMessage(message)]
         else:
             return None
 
 class TestingQueue(Queue):
 
-    def __init__(self, region_name, queue_name):
+    def __init__(self, region_name, queue_name, logger=logging.getLogger(__name__)):
         self.queue = MockSQS()
+        self.logger = logger
 
 
 class QueueTest(unittest.TestCase):
@@ -47,4 +66,10 @@ class QueueTest(unittest.TestCase):
         queue.push('test!')
         item = queue.pop()
         self.assertIsNotNone(item)
-        self.assertEqual(json.dumps('test!'), item)
+        self.assertEqual('test!', item)
+
+        message = {'test': 'yes', 'happy': 'maybe'}
+        queue.push(json.dumps(message))
+        item = queue.pop()
+        self.assertEqual(json.dumps(message), item)
+
