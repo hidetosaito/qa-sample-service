@@ -10,7 +10,7 @@ import unittest
 class RootAppTest(unittest.TestCase):
 
     def setUp(self):
-        app.config['TESTING'] = True
+        app.config.from_object('config.TestConfig')
         self.app = app.test_client()
 
     def test_root(self):

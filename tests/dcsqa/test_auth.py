@@ -5,7 +5,7 @@ from entry import app
 class AuthosrizedTest(unittest.TestCase):
 
     def setUp(self):
-        app.config['TESTING'] = True
+        app.config.from_object('config.TestConfig')
         self.app = app.test_client()
 
     def _request(self, username, password):
