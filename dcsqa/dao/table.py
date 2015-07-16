@@ -1,16 +1,10 @@
-'''
-Created on Jul 9, 2015
-
-@author: Hideto Saito
-'''
+#
+# refer to https://boto3.readthedocs.org/en/latest/guide/dynamodb.html
+#
 
 import boto3
 import logging
 from boto3.dynamodb.conditions import Key, Attr
-
-#
-# refer to https://boto3.readthedocs.org/en/latest/guide/dynamodb.html
-#
 
 
 class DataTable(object):

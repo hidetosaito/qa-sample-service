@@ -1,4 +1,7 @@
-# https://flask-httpauth.readthedocs.org/en/latest/
+#
+# refer to https://flask-httpauth.readthedocs.org/en/latest/
+#
+
 from flask.ext.httpauth import HTTPBasicAuth
 
 

@@ -34,7 +34,7 @@ class QueueTest(unittest.TestCase):
         self.region_name = 'us-east-1'
 
     """
-    # boto3 didn't support 'send_message' action
+    # moto didn't support 'send_message' action
     def _create_queue(self):
         sqs = boto3.resource('sqs', region_name=self.region_name)
         sqs.create_queue(QueueName=self.queue_name)

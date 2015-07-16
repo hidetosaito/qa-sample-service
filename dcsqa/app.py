@@ -1,5 +1,6 @@
-#!/bin/env python
-# coding: utf-8
+#
+# refer to http://flask.pocoo.org/docs/0.10/quickstart/
+#
 
 from flask import Flask
 from criteria import criteria_blueprint

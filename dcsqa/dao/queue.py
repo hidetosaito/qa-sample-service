@@ -1,10 +1,10 @@
-import boto3
-import json
-import logging
-
 #
 # refer to http://boto3.readthedocs.org/en/latest/guide/sqs.html
 #
+
+import boto3
+import json
+import logging
 
 
 class Queue(object):
