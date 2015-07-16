@@ -49,7 +49,7 @@ def set_raw_by_ticketkey_host():
     #    1. must be content-type is applicaiton/json
     #    2. JSON must be parsed successfully
     #    3. JSON must has TicketKey
-    #    4. JSON must has Host
+    #    4. save to DB
     #
 
     # 1.
@@ -65,16 +65,15 @@ def set_raw_by_ticketkey_host():
         return response.bad_request("invalid JSON format")
 
     # 3.
-    if 'TicketKey' not in data:
-        return response.bad_request("TiketKey is not found")
+    required_key = ['TicketKey', 'Host']
+    for key in required_key:
+        if key not in data:
+            return response.bad_request("{key} is not found".format(key=key))
 
     # 4.
-    if 'Host' not in data:
-        return response.bad_request("Host is not found")
-
     dao = DataTable(region_name=current_app.config['DYNAMODB_REGION'],
                     table_name=current_app.config['CRITERIA_TABLE'],
                     logger=current_app.logger)
     result = dao.save(data)
 
-    return response.is_okay()
+    return response.created()

@@ -85,5 +85,5 @@ def set_criteria_by_ticketkey_host():
                   logger=current_app.logger)
     queue.push({key: data[key] for key in required_key})
 
-    return response.is_okay()
+    return response.created()
 

@@ -5,7 +5,6 @@ from flask.ext.api import status
 
 
 def get_json(obj):
-
     def _convert_decimal_to_int(obj):
         if isinstance(obj, decimal.Decimal):
             return int(obj)
@@ -24,5 +23,5 @@ def bad_request(message):
     return make_response(message, status.HTTP_400_BAD_REQUEST)
 
 
-def is_okay():
+def created():
     return make_response('ok', status.HTTP_201_CREATED)
