@@ -1,14 +1,16 @@
 #http://flask.pocoo.org/docs/0.10/tutorial/setup/
-import os
 
 
 class Config(object):
 
     DEBUG = True
-    #BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+    TESTING = False
 
 
 class ProductionConfig(Config):
+
+    # host
+    HOST = '0.0.0.0'
 
     # dynamodb
     DYNAMODB_REGION = 'us-west-1'
@@ -23,6 +25,9 @@ class ProductionConfig(Config):
 
 class DevelopmentConfig(Config):
 
+    # host
+    HOST = '127.0.0.1'
+
     # dynamodb
     DYNAMODB_REGION = 'us-east-1'
     CRITERIA_TABLE = 'QAPortal-POC-Criteria'
@@ -32,3 +37,27 @@ class DevelopmentConfig(Config):
     # sqs
     SQS_REGIOM = 'us-east-1'
     SQS_NAME = 'QATaskQueue-POC'
+
+
+class DevelopmentContainerConfig(DevelopmentConfig):
+
+    # host
+    HOST = '0.0.0.0'
+
+
+class TestConfig(Config):
+
+    TESTING = True
+
+    # host
+    HOST = '0.0.0.0'
+
+    # dynamodb
+    DYNAMODB_REGION = 'us-east-1'
+    CRITERIA_TABLE = 'test-Criteria'
+    RAW_TABLE = 'test-RawData'
+    RESULT_TABLE = 'test-QAResult'
+
+    # sqs
+    SQS_REGIOM = 'us-east-1'
+    SQS_NAME = 'test-POC'

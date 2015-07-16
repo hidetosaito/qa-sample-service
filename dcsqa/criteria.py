@@ -1,89 +1,89 @@
 #!/bin/env python
 # coding: utf-8
 
-import decimal
-import json
-
-from flask import request, make_response
-from flask.ext.api import status
-from flask import Blueprint
+import response
 from dcsqa.dao.table import DataTable
-from flask import current_app
+from dcsqa.dao.queue import Queue
+from auth import auth
+from flask import request, Blueprint, current_app
 
 criteria_blueprint = Blueprint('criteria', __name__)
 
-# TODO - move out as utils
-def _convert_decimal_to_int(obj):
-    if isinstance(obj, decimal.Decimal):
-        return int(obj)
+@criteria_blueprint.before_request
+@auth.login_required
+def before_request():
+    current_app.logger.debug("user login - {user}".format(user=auth.username()))
 
 
-def _get_response_json(obj):
-    if obj != None:
-        response = make_response(json.dumps(obj, default=_convert_decimal_to_int))
-    else:
-        response = make_response('', status.HTTP_204_NO_CONTENT)
-    
-    response.mimetype = 'application/json'
-    
-    return response
-
-
-@criteria_blueprint.route('/', methods=['GET'])
+@criteria_blueprint.route('', methods=['GET'])
 def get_all_criteria():
-    criteria = DataTable(region_name=current_app.config['DYNAMODB_REGION'], table_name=current_app.config['CRITERIA_TABLE'])
+    criteria = DataTable(region_name=current_app.config['DYNAMODB_REGION'],
+                         table_name=current_app.config['CRITERIA_TABLE'],
+                         logger=current_app.logger)
     result = criteria.find_all()
-    return _get_response_json(result)
+    return response.get_json(result)
 
 
 @criteria_blueprint.route('/<ticket_key>', methods=['GET'])
 def get_criteria_by_ticketkey(ticket_key):
-    criteria = DataTable(region_name=current_app.config['DYNAMODB_REGION'], table_name=current_app.config['CRITERIA_TABLE'])
+    criteria = DataTable(region_name=current_app.config['DYNAMODB_REGION'],
+                         table_name=current_app.config['CRITERIA_TABLE'],
+                         logger=current_app.logger)
     result = criteria.find_by_ticketkey(ticket_key)
-    return _get_response_json(result)
+    return response.get_json(result)
 
 
 @criteria_blueprint.route('/<ticket_key>/<host>', methods=['GET'])
 def get_criteria_by_ticketkey_host(ticket_key, host):
-    criteria = DataTable(region_name=current_app.config['DYNAMODB_REGION'], table_name=current_app.config['CRITERIA_TABLE'])
+    criteria = DataTable(region_name=current_app.config['DYNAMODB_REGION'],
+                         table_name=current_app.config['CRITERIA_TABLE'],
+                         logger=current_app.logger)
     result = criteria.find_by_ticketkey_host(ticket_key, host)
-    return _get_response_json(result)
+    return response.get_json(result)
 
 
-@criteria_blueprint.route('/', methods=['POST'])
+@criteria_blueprint.route('', methods=['POST'])
 def set_criteria_by_ticketkey_host():
     
     #
     # [Validation]
     #    1. must be content-type is applicaiton/json
     #    2. JSON must be parsed successfully
-    #    3. JSON must has TicketKey
-    #    4. JSON must has Host
+    #    3. JSON must has TicketKey and Host
+    #    4. save to DB
     #    5. enqueue
     #
     
     # 1.
     if request.headers['Content-Type'] != 'application/json':
-        return make_response('please send application/json', status.HTTP_400_BAD_REQUEST)
-    
+        current_app.logger.warn("received Content-Type %s" % request.headers['Content-Type'])
+        return response.bad_request("please send application/json")
+
     # 2.
     # http://flask.pocoo.org/docs/0.10/api/#flask.Request.get_json
     try:
         data = request.get_json()
     except Exception as ex:
-        #criteria_blueprint.loo
-        return make_response('invalid JSON format', status.HTTP_400_BAD_REQUEST)
-    
-    # 3.
-    if 'TicketKey' not in data:
-        return make_response('TiketKey is not found', status.HTTP_400_BAD_REQUEST)
-    
-    # 4.
-    if 'Host' not in data:
-        return make_response('Host is not found', status.HTTP_400_BAD_REQUEST)
-    
-    dao = DataTable(region_name=current_app.config['DYNAMODB_REGION'], table_name=current_app.config['CRITERIA_TABLE'])
-    result = dao.save(data)
+        current_app.logger.warn("couldn't parse JSON %s" % ex)
+        return response.bad_request("invalid JSON format")
 
-    return make_response('ok', status.HTTP_201_CREATED)
+    # 3.
+    required_key = ['TicketKey', 'Host']
+    for key in required_key:
+        if key not in data:
+            return response.bad_request("{key} is not found".format(key=key))
+
+    # 4.
+    table = DataTable(region_name=current_app.config['DYNAMODB_REGION'],
+                    table_name=current_app.config['CRITERIA_TABLE'],
+                    logger=current_app.logger)
+    result = table.save(data)
+
+    # 5.
+    queue = Queue(region_name=current_app.config['SQS_REGIOM'],
+                  queue_name=current_app.config['SQS_NAME'],
+                  logger=current_app.logger)
+    queue.push({key: data[key] for key in required_key})
+
+    return response.created()
 
