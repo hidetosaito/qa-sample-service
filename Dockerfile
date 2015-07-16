@@ -1,19 +1,23 @@
-# To run this: sudo docker build .
+FROM ubuntu:14.04
 
-FROM python:2.7.7
+# Update packages
+RUN apt-get update -y
+
+# Install Python Setuptools
+RUN apt-get install -y python-setuptools git
+
+# Install pip
+RUN easy_install pip
 
 # Bundle app source
-ADD . /code
+ADD . /src
+WORKDIR /src
 
-# install dependency
-WORKDIR /code
+# Add and install Python modules
 RUN pip install -r requirements.txt
 
-# Expose port
-EXPOSE 5000
+# Expose
+EXPOSE  5000
 
 # Run
 CMD ["python", "entry.py"]
-
-
-

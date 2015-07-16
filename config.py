@@ -9,6 +9,9 @@ class Config(object):
 
 class ProductionConfig(Config):
 
+    # host
+    HOST = '0.0.0.0'
+
     # dynamodb
     DYNAMODB_REGION = 'us-west-1'
     CRITERIA_TABLE = 'QAPortal-Staging-Criteria'
@@ -22,6 +25,9 @@ class ProductionConfig(Config):
 
 class DevelopmentConfig(Config):
 
+    # host
+    HOST = '127.0.0.1'
+
     # dynamodb
     DYNAMODB_REGION = 'us-east-1'
     CRITERIA_TABLE = 'QAPortal-POC-Criteria'
@@ -33,9 +39,18 @@ class DevelopmentConfig(Config):
     SQS_NAME = 'QATaskQueue-POC'
 
 
+class DevelopmentContainerConfig(DevelopmentConfig):
+
+    # host
+    HOST = '0.0.0.0'
+
+
 class TestConfig(Config):
 
     TESTING = True
+
+    # host
+    HOST = '0.0.0.0'
 
     # dynamodb
     DYNAMODB_REGION = 'us-east-1'

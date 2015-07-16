@@ -6,6 +6,8 @@ from mock import Mock
 from dcsqa.dao.queue import Queue
 
 class MockMessage(object):
+    """ refer to http://boto3.readthedocs.org/en/latest/reference/services/sqs.html
+    """
 
     def __init__(self, message):
         self.message = message
