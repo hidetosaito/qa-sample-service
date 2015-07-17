@@ -1,0 +1,61 @@
+{
+	"kind":"ReplicationController",
+	"apiVersion":"v1beta3",
+	"metadata":{
+		"name":"qa-sample-service"
+	},
+	"spec":{
+		"replicas":1,
+		"selector":{
+			"name":"qa-sample-service"
+		},
+		"template":{
+			"metadata":{
+				"labels":{
+					"name":"qa-sample-service"
+				}
+				
+			},
+			"spec":{
+				"containers":[
+					{
+						"name":"qa-sample-service",
+						"image":"hidetosaito/qa-sample-service",
+						"imagePullPolicy":"Always",
+						"env":[
+							{
+								"name":"AWS_ACCESS_KEY_ID",
+								"value":"<your accesskey>"
+							},
+							{
+								"name":"AWS_SECRET_ACCESS_KEY",
+								"value":"<your secretkey>"
+							},
+							{
+								"name":"APP_SETTING",
+								"value":"config.DevelopmentContainerConfig"
+							},
+							{
+								"name":"PORT",
+								"value":"5000"
+							}
+							
+						],
+						"ports":[
+							{
+								"name":"http",
+								"containerPort":5000
+							}
+							
+						]
+						
+					}
+					
+				]
+				
+			}
+			
+		}
+		
+	}
+}
