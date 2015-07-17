@@ -23,12 +23,14 @@ setup(
     author_email='dcsrd@dl.trendmicro.com',
     packages=find_packages(exclude=("tests", "tests.*", "bin", "bin.*")),
     include_package_data=True,
+    test_suite = 'nose.collector',
     zip_safe=False,
     install_requires=[
         'Flask>=0.10.1',
         'boto3>=1.1.0',
         'mock>=1.1.2',
         'Flask-API>=0.6.3',
-        'Flask-HTTPAuth'
+        'Flask-HTTPAuth',
+        'nose'
     ],
 )
