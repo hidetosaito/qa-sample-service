@@ -3,6 +3,8 @@
 #
 
 from flask import Flask
+from flask.ext.cache import Cache
+
 from criteria import criteria_blueprint
 from raw import raw_blueprint
 from result import result_blueprint
@@ -13,6 +15,7 @@ app = Flask(__name__)
 
 def create_app(app_name='dcsqa', config='config.DevelopmentConfig'):
     app.config.from_object(config)
+    app.cache = Cache(app) 
 
     # register blueprint for each restful entry
     # http://flask.pocoo.org/docs/0.10/blueprints/
