@@ -21,6 +21,13 @@ class ProductionConfig(Config):
     # sqs
     SQS_REGIOM = 'us-west-1'
     SQS_NAME = 'QATaskQueue-Staging'
+    
+    # cache
+    # http://pythonhosted.org/Flask-Cache/#configuring-flask-cache
+    CACHE_TYPE = 'memcached'
+    CACHE_MEMCACHED_SERVERS = ''
+    CACHE_MEMCACHED_USERNAME = ''
+    CACHE_MEMCACHED_PASSWORD = ''
 
 
 class DevelopmentConfig(Config):
@@ -37,6 +44,9 @@ class DevelopmentConfig(Config):
     # sqs
     SQS_REGIOM = 'us-east-1'
     SQS_NAME = 'QATaskQueue-POC'
+    
+    # cache
+    CACHE_TYPE = 'simple'
 
 
 class DevelopmentContainerConfig(DevelopmentConfig):
@@ -61,3 +71,6 @@ class TestConfig(Config):
     # sqs
     SQS_REGIOM = 'us-east-1'
     SQS_NAME = 'test-POC'
+    
+    # cache
+    CACHE_TYPE = 'simple'
