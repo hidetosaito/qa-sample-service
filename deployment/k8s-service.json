@@ -1,0 +1,20 @@
+{
+	"apiVersion":"v1beta3",
+	"kind":"Service",
+	"metadata":{
+		"name":"qa-sample-service"
+	},
+	"spec":{
+		"ports":[
+			{
+				"protocol":"TCP",
+				"port":5000,
+				"nodePort":30080
+			}
+		],
+		"type":"NodePort",
+		"selector":{
+			"name":"qa-sample-service"
+		}
+	}
+}
