@@ -2,6 +2,7 @@
 # refer to http://flask.pocoo.org/docs/0.10/quickstart/
 #
 
+import os
 from flask import Flask
 from flask.ext.cache import Cache
 
@@ -9,6 +10,7 @@ from criteria import criteria_blueprint
 from raw import raw_blueprint
 from result import result_blueprint
 from auth import auth
+from flask.templating import render_template
 
 app = Flask(__name__)
 
@@ -35,3 +37,8 @@ def index():
 @auth.login_required
 def login():
     return 'welcome!'
+
+@app.route('/env')
+@auth.login_required
+def env():
+    return render_template('env.html', env=os.environ)
