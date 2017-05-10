@@ -1,6 +1,6 @@
 # QA Sample Service
 ==
-
+ 
 ## Before you start
 * Install docker. If you're using MacOS or Windows, you'll need [Boot2docker](http://boot2docker.io/) or [Vagrant](https://www.vagrantup.com/)
 
